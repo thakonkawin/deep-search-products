@@ -1,0 +1,10 @@
+fastapi
+uvicorn[standard]
+sqlalchemy
+asyncpg
+psycopg2-binary
+greenlet
+python-multipart 
+pgvector
+torchvision
+torch

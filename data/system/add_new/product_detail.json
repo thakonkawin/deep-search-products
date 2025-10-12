@@ -1,0 +1,11 @@
+{
+    "product_code": "PNEW-001",
+    "product_name": "nike-new",
+    "description": "test",
+    "price": 1200,
+    "quantity": 100,
+    "category": "รองเท้า",
+    "unit": "คู่",
+    "shelf": "A1",
+    "image_url": "https://drive.google.com/uc?export=view&id=1pKsyghe3o9ixsZb0-FYZwpOYZeE5Gus4"
+}
