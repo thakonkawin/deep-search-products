@@ -4,7 +4,6 @@ import 'package:camera/camera.dart';
 import 'package:path_provider/path_provider.dart';
 import 'deep_screen.dart';
 import 'package:image/image.dart' as img;
-// import 'package:fc_native_image_resize/fc_native_image_resize.dart';
 
 class TakePictureScreen extends StatefulWidget {
   const TakePictureScreen({super.key, required this.camera});
@@ -17,9 +16,6 @@ class TakePictureScreen extends StatefulWidget {
 class TakePictureScreenState extends State<TakePictureScreen> {
   late CameraController _controller;
   late Future<void> _initializeControllerFuture;
-
-  final double boxWidth = 224;
-  final double boxHeight = 224;
 
   @override
   void initState() {
@@ -35,21 +31,28 @@ class TakePictureScreenState extends State<TakePictureScreen> {
   }
 
   Future<File> _cropAndResize(File originalImage, Size screenSize) async {
+    final stopwatch = Stopwatch()..start();
+
+    // อ่านไฟล์ครั้งเดียว
     final imageBytes = await originalImage.readAsBytes();
     final img.Image? capturedImage = img.decodeImage(imageBytes);
     if (capturedImage == null) throw Exception("ไม่สามารถอ่านภาพได้");
 
+    // กำหนดขนาด box ของ crop
+    final boxWidth = screenSize.width;
+    final boxHeight = screenSize.width;
     final overlayLeft = (screenSize.width - boxWidth) / 2;
     final overlayTop = (screenSize.height - boxHeight) / 2;
-
     final scaleX = capturedImage.width / screenSize.width;
     final scaleY = capturedImage.height / screenSize.height;
 
+    // คำนวณ crop rectangle
     final cropX = (overlayLeft * scaleX).round();
     final cropY = (overlayTop * scaleY).round();
     final cropWidth = (boxWidth * scaleX).round();
     final cropHeight = (boxHeight * scaleY).round();
 
+    // Crop image
     final img.Image cropped = img.copyCrop(
       capturedImage,
       x: cropX,
@@ -58,25 +61,19 @@ class TakePictureScreenState extends State<TakePictureScreen> {
       height: cropHeight,
     );
 
+    final jpgBytes = img.encodeJpg(cropped, quality: 50);
+
+    // Save file
     final tempDir = await getTemporaryDirectory();
     final croppedFile = File(
       '${tempDir.path}/cropped_${DateTime.now().millisecondsSinceEpoch}.jpg',
     );
-    await croppedFile.writeAsBytes(img.encodeJpg(cropped));
+    await croppedFile.writeAsBytes(jpgBytes);
 
-    // resize ด้วย FcNativeImageResize
-    // final resizedFile = File(
-    //   '${tempDir.path}/resized_${DateTime.now().millisecondsSinceEpoch}.jpg',
-    // );
-    // await FcNativeImageResize().resizeFile(
-    //   srcFile: croppedFile.path,
-    //   destFile: resizedFile.path,
-    //   width: 224,
-    //   height: 224,
-    //   keepAspectRatio: true,
-    //   format: 'jpeg',
-    //   quality: 100,
-    // );
+    stopwatch.stop();
+    debugPrint(
+      'เวลาทำงานของ _cropAndResize: ${stopwatch.elapsedMilliseconds} ms',
+    );
 
     return croppedFile;
   }
@@ -99,10 +96,7 @@ class TakePictureScreenState extends State<TakePictureScreen> {
               CameraPreview(_controller),
               // overlay mask
               ColorFiltered(
-                colorFilter: ColorFilter.mode(
-                  Colors.black.withAlpha(200),
-                  BlendMode.srcOut,
-                ),
+                colorFilter: ColorFilter.mode(Colors.black, BlendMode.srcOut),
                 child: Stack(
                   fit: StackFit.expand,
                   children: [
@@ -116,8 +110,8 @@ class TakePictureScreenState extends State<TakePictureScreen> {
                     Align(
                       alignment: Alignment.center,
                       child: Container(
-                        width: boxWidth,
-                        height: boxHeight,
+                        width: screenSize.width * 0.9,
+                        height: screenSize.width * 0.9,
                         decoration: BoxDecoration(
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(8),
@@ -131,8 +125,8 @@ class TakePictureScreenState extends State<TakePictureScreen> {
               Align(
                 alignment: Alignment.center,
                 child: Container(
-                  width: boxWidth,
-                  height: boxHeight,
+                  width: screenSize.width * 0.9,
+                  height: screenSize.width * 0.9,
                   decoration: BoxDecoration(
                     border: Border.all(color: Colors.white, width: 2),
                     borderRadius: BorderRadius.circular(8),

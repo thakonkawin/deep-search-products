@@ -10,8 +10,9 @@ CREATE TABLE products (
     image_url           TEXT                    -- ลิงก์รูปภาพ
 );
 
+
 INSERT INTO products (product_code, product_name, description, price, quantity, category, unit, shelf, image_url) VALUES
-('HQ2037-100', 'Nike Air Force 1 07 LV8 white deep royal-blue', 'Air Force', 4700, 20, 'รองเท้า', 'คู่', 'A-01', 'https://drive.google.com/file/d/1as3f2PQ0o99TvpC_GPHaqd-HJrbjA-AV/view?usp=sharing'),
+('HQ2037-100', 'Nike Air Force 1 07 LV8 white deep royal-blue', 'Air Force', 4700, 20, 'รองเท้า', 'คู่', 'A-01', 'https://drive.google.com/uc?export=view&id=1as3f2PQ0o99TvpC_GPHaqd-HJrbjA-AV'),
 ('315122-001', 'Nike Air Force 1 Low 07 Triple Black', 'Air Force', 3700, 19, 'รองเท้า', 'คู่', 'A-02', 'https://drive.google.com/uc?export=view&id=1IZXs24DNOI6eJJliOR6MTaoZ7yeYt07l'),
 ('DJ3911-100', 'Nike Air Force 1 Low 07 Triple White', 'Air Force', 3700, 21, 'รองเท้า', 'คู่', 'A-03', 'https://drive.google.com/uc?export=view&id=1z81zcOhC7lBVbxaPtObkh8EsdRZ7d0iv'),
 ('NIKE-SNSAJ1HOP4V49', 'nike air jordan 1 high og panda', 'Air Jordan', 6600, 20, 'รองเท้า', 'คู่', 'B-01', 'https://drive.google.com/uc?export=view&id=1fObVR1TIqxzIEQVWemZPE78zat4gIFs1'),
