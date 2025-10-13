@@ -42,8 +42,6 @@ These features are then compared with the existing product image database to fin
 ├─ scripts/                                 # สคริปต์สำหรับการฝึกและประเมินผล          
 │  └─ train_model.ipynb                        
 │  
-├─ tests/                                   # ข้อมูลสำหรับทดสอบระบบ
-│  
 ├─ README.md                                # คำอธิบายโครงงาน วิธีติดตั้ง และวิธีรัน
 │  
 └─ requirements.txt                         # สำหรับติดตั้ง dependencies
@@ -104,11 +102,13 @@ cd applications/database
 docker compose up --build
 ```
 
-3. Initialize the database by executing the SQL script:
+3. (Optional) Restore sample data from backup:
+`./applications/database/backup_v1.dump` 
+
+4. (Optional) Initialize the database by executing the SQL script:
 `./applications/database/init.sql` 
 
-4. (Optional) Restore sample data from backup:
-`./applications/database/backup` 
+
 
 ---
 
@@ -132,11 +132,10 @@ docker compose up --build
 
 To test the API endpoints using Postman, import the following files:
 
-- `applications/api/postman/deep-search.postman_collection.json` 
+- `applications/api/deep-search.postman_collection.json` 
 
-- `applications/api/postman/deep-search.postman_environment.json`
 
-💡 These files include all API routes and environment variables needed to test the Deep Search API.
+💡 These files include all API routes needed to test the Deep Search API.
 
 ---
 

@@ -13,10 +13,12 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "{{api_url}}/products",
+					"raw": "http://localhost:4345/products",
+					"protocol": "http",
 					"host": [
-						"{{api_url}}"
+						"localhost"
 					],
+					"port": "4345",
 					"path": [
 						"products"
 					]
@@ -30,13 +32,15 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "{{api_url}}/products/HQ2037-100",
+					"raw": "http://localhost:4345/products/315122-001",
+					"protocol": "http",
 					"host": [
-						"{{api_url}}"
+						"localhost"
 					],
+					"port": "4345",
 					"path": [
 						"products",
-						"HQ2037-100"
+						"315122-001"
 					]
 				}
 			},
@@ -57,10 +61,12 @@
 					}
 				},
 				"url": {
-					"raw": "{{api_url}}/products",
+					"raw": "http://localhost:4345/products",
+					"protocol": "http",
 					"host": [
-						"{{api_url}}"
+						"localhost"
 					],
+					"port": "4345",
 					"path": [
 						"products"
 					]
@@ -78,25 +84,27 @@
 					"formdata": [
 						{
 							"key": "product_code",
-							"value": "FD6923-100",
+							"value": "NIKE-SNSAJ1HOP4V49",
 							"type": "text"
 						},
 						{
 							"key": "files",
 							"type": "file",
 							"src": [
-								"/Users/thakonpgm/Downloads/selected-2-10-68/add_new/FD6923-100/database/nike-dunk-low-industrial-blue-1.jpg",
-								"/Users/thakonpgm/Downloads/selected-2-10-68/add_new/FD6923-100/database/nike-dunk-low-industrial-blue-3.jpg",
-								"/Users/thakonpgm/Downloads/selected-2-10-68/add_new/FD6923-100/database/nike-dunk-low-industrial-blue-2.jpg"
+								"/Users/thakonpgm/Storages/deep-product-search/data/system/database/NIKE-SNSAJ1HOP4V49/2.png",
+								"/Users/thakonpgm/Storages/deep-product-search/data/system/database/NIKE-SNSAJ1HOP4V49/7.png",
+								"/Users/thakonpgm/Storages/deep-product-search/data/system/database/NIKE-SNSAJ1HOP4V49/9.png"
 							]
 						}
 					]
 				},
 				"url": {
-					"raw": "{{api_url}}/products-vectors",
+					"raw": "http://localhost:4345/products-vectors",
+					"protocol": "http",
 					"host": [
-						"{{api_url}}"
+						"localhost"
 					],
+					"port": "4345",
 					"path": [
 						"products-vectors"
 					]
@@ -115,15 +123,17 @@
 						{
 							"key": "file",
 							"type": "file",
-							"src": "/Users/thakonpgm/Downloads/selected-2-10-68/test/Screenshot 2568-10-10 at 21.23.00.png"
+							"src": "/Users/thakonpgm/Storages/deep-product-search/data/system/test/errors/error2.png"
 						}
 					]
 				},
 				"url": {
-					"raw": "{{api_url}}/deep",
+					"raw": "http://localhost:4345/deep",
+					"protocol": "http",
 					"host": [
-						"{{api_url}}"
+						"localhost"
 					],
+					"port": "4345",
 					"path": [
 						"deep"
 					]
