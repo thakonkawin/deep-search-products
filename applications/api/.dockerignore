@@ -1,0 +1,38 @@
+# Python specific
+__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/
+.venv/
+env/
+venv/
+pip-cache/
+
+# Version control
+.git/
+.gitignore
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*~
+
+# Environment variables and sensitive data
+.env
+.flaskenv
+.aws/
+.ssh/
+
+# Test-related files
+coverage/
+htmlcov/
+
+# Operating system specific files
+.DS_Store
+Thumbs.db
+
+# Docker-related files (often already handled by Docker's default behavior, but explicit inclusion can be useful)
+Dockerfile
+docker-compose.yml
+README.md

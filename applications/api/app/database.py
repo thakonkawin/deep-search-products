@@ -1,18 +1,16 @@
+import os
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
+from dotenv import load_dotenv
 
-# for run manual
-# DATABASE_URL = (
-#     "postgresql+asyncpg://myuser:mypassword@127.0.0.1:5432/deep_project_db"
-# )
+load_dotenv()
 
-# for run with docker
-DATABASE_URL = (
-    "postgresql+asyncpg://myuser:mypassword@host.docker.internal:5432/deep_project_db"
-)
+DATABASE_URL = os.getenv("DATABASE_URL")
+
+if not DATABASE_URL:
+    raise ValueError("DATABASE_URL is not set in the environment variables.")
 
 engine = create_async_engine(DATABASE_URL, echo=True)
-
 AsyncSessionLocal = sessionmaker(engine, class_=AsyncSession, expire_on_commit=False)
 
 

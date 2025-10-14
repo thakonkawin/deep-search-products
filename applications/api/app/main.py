@@ -1,11 +1,10 @@
-# import os
-
 import uvicorn
 from .products import Base
 from .database import engine
 from fastapi import FastAPI
 from contextlib import asynccontextmanager
 from .routes import router as products_router
+from fastapi.middleware.cors import CORSMiddleware
 
 
 # DB Connection
@@ -20,8 +19,16 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(lifespan=lifespan, title="Deep Product Search API", version="1.0.0")
 
-app.include_router(products_router)
+origins = [
+    "*",
+]
 
-# for run manual
-# if __name__ == "__main__":
-#     uvicorn.run("app.main:app", host="127.0.0.1", port=4345, reload=True)
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+app.include_router(products_router)
