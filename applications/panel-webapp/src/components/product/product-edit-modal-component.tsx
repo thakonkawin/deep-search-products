@@ -188,6 +188,7 @@ export function ProductEditModal({
           placeholder="เลือกหมวดหมู่"
           data={categories}
           mb="md"
+          comboboxProps={{ zIndex: 1004, withinPortal: false }}
           {...form.getInputProps("category")}
         />
 
@@ -196,6 +197,7 @@ export function ProductEditModal({
           placeholder="เช่น ชิ้น, กล่อง, กิโลกรัม"
           data={units}
           mb="md"
+          comboboxProps={{ zIndex: 1004, withinPortal: false }}
           {...form.getInputProps("unit")}
         />
 

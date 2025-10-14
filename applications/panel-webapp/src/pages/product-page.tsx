@@ -50,7 +50,7 @@ export default function ProductPage() {
               message: "ลบรายการสินค้าสำเร็จ",
               color: "green",
             });
-            fetchProductHandler();
+            refreshFetch();
           } else {
             Notifications.show({
               title: "เกิดข้อผิดพลาด",
@@ -117,7 +117,7 @@ export default function ProductPage() {
   return (
     <>
       {
-        products.length > 0 && (
+        (Array.isArray(products) && products.length > 0) && (
           <>
             <ProductEditModal
               initialValues={products.find((x) => x.product_code == edit)}
@@ -204,7 +204,7 @@ export default function ProductPage() {
         </SimpleGrid>
 
         <Flex mt="md" justify="center" gap="md" wrap="wrap" align="center">
-          {products.map((product) => (
+          {Array.isArray(products) && products.map((product) => (
             <ProductCard
               key={product.product_code}
               product={product}

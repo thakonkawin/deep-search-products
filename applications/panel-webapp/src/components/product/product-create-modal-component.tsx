@@ -310,6 +310,7 @@ export function ProductCreateModal({ callback }: { callback: () => void }) {
                 placeholder="เลือกหมวดหมู่"
                 required
                 data={categories}
+                comboboxProps={{ zIndex: 1007, withinPortal: false }}
                 mb="md"
                 {...form.getInputProps("category")}
               />
@@ -319,6 +320,7 @@ export function ProductCreateModal({ callback }: { callback: () => void }) {
                 placeholder="เช่น ชิ้น, กล่อง, กิโลกรัม"
                 required
                 data={units}
+                comboboxProps={{ zIndex: 1007, withinPortal: false }}
                 mb="md"
                 {...form.getInputProps("unit")}
               />
