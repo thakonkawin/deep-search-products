@@ -13,10 +13,7 @@ preprocess = transforms.Compose(
     ]
 )
 
-
-def get_image_embedding(model, image_input, device=None):
-    if device is None:
-        device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+def get_image_embedding(model, image_input, device):
 
     if isinstance(image_input, bytes):
         img = Image.open(BytesIO(image_input)).convert("RGB")
@@ -27,10 +24,10 @@ def get_image_embedding(model, image_input, device=None):
 
     input_tensor = preprocess(img).unsqueeze(0).to(device)
 
-    model.to(device)
-    model.eval()
-
     with torch.no_grad():
         embedding = model(input_tensor)
 
     return embedding
+
+def cosine_distance_to_percent(distance: float) -> float:
+    return max(0, min(100, (1 - distance / 2) * 100))

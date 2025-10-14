@@ -1,11 +1,11 @@
 import uuid
-from typing import Optional
 from datetime import datetime
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from pgvector.sqlalchemy import Vector
 from sqlalchemy.orm import declarative_base
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy import Column, String, Integer, Numeric, Text, DateTime, ForeignKey
+from typing import List, Optional
 
 Base = declarative_base()
 
@@ -21,7 +21,8 @@ class Product(Base):
     category = Column(String(100))
     unit = Column(String(50))
     shelf = Column(String(50))
-    image_url = Column(Text)
+    created_at = Column(DateTime, default=datetime.now)
+    updated_at = Column(DateTime, default=datetime.now, onupdate=datetime.now)
 
 
 class ProductSchema(BaseModel):
@@ -33,7 +34,7 @@ class ProductSchema(BaseModel):
     category: Optional[str] = None
     unit: Optional[str] = None
     shelf: Optional[str] = None
-    image_url: Optional[str] = None
+    image_id: List[uuid.UUID] = Field(default_factory=list)
 
     model_config = dict(from_attributes=True)
 
@@ -41,7 +42,7 @@ class ProductSchema(BaseModel):
 class ShortProductSchema(BaseModel):
     product_code: str
     product_name: str
-    image_url: Optional[str] = None
+    image_id: List[uuid.UUID] = Field(default_factory=list)
 
     model_config = dict(from_attributes=True)
 
@@ -54,4 +55,16 @@ class ProductVector(Base):
         String(50), ForeignKey("products.product_code"), nullable=False
     )
     embeded = Column(Vector(128), nullable=False)
-    created_at = Column(DateTime, default=datetime.now())
+    image = Column(Text)
+    created_at = Column(DateTime, default=datetime.now)
+
+class LowStockProduct(BaseModel):
+    product_code: str
+    product_name: str
+    quantity: int
+
+class ProductStatisticsResponse(BaseModel):
+    total_products: int
+    total_quantity: int
+    total_categories: int
+    low_stock_products: List[LowStockProduct]
