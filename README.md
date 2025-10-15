@@ -30,22 +30,21 @@ similar products.
 │  ├─ api/                               
 │  ├─ database/
 │  ├─ mobile/                                         
-│  └─ website/
+│  └─ panel-webapp/
 │  
-├─ data/                                    # ชุดข้อมูลหรือสคริปต์ดาวน์โหลดข้อมูล
-│  ├─ system/                               # ชุดข้อมูลสำหรับทดสอบระบบ
-│  ├─ train/                                # ชุดข้อมูลสำหรับเทรนโมเดล
-│  └─ test/                                 # ชุดข้อมูลสำหรับทดสอบโมเดล
+├─ data/                                  
+│  ├─ dataset/                              # ชุดข้อมูลสำหรับเทรนและทดสอบโมเดล
+│  └─ system/                               # ชุดข้อมูลสำหรับทดสอบโปรแกรมค้นหาสินค้า
 │  
 ├─ demos/                                   # คลิปวิดีโอ Demo ของทั้ง 3 Scenarios     
 │  ├─ easy.mp4                                
 │  ├─ medium.mp4                                           
 │  └─ hard.mp4
 │        
-├─ models/                                  # ไฟล์ weight ของโมเดล หรือวิธีการสร้างซ้ำ    
+├─ models/                                  # ไฟล์ weight ของโมเดล   
 │
-├─ scripts/                                 # สคริปต์สำหรับการฝึกและประเมินผล          
-│  └─ train_model.ipynb                        
+├─ scripts/                                         
+│  └─ train_model.ipynb                     # สคริปต์สำหรับการฝึกและประเมินผล  
 │  
 ├─ README.md                                # คำอธิบายโครงงาน วิธีติดตั้ง และวิธีรัน
 │  
@@ -84,84 +83,31 @@ pip install -r requirements.txt
 ```bash
 jupyter notebook train_model.ipynb
 ```
+## ⚙️ Installation & Run Apllication
 
-## Software Requirements
+### 1️⃣  Installation & Run Apllication
 
-| Software                   | Version | Installation Guide                                                                 |
-| -------------------------- | ------- | ---------------------------------------------------------------------------------- |
-| **PostgreSQL**             | 15+     | [https://www.postgresql.org/download/](https://www.postgresql.org/download/)       |
-| **UNKNOWN**                | ---     | [https://nodejs.org/en/download](https://nodejs.org/en/download)                   |
-| **Flutter SDK (Optional)** | 3.0+    | [https://docs.flutter.dev/install/manual](https://docs.flutter.dev/install/manual) |
-| **Docker**                 | Latest  | [https://docs.docker.com/get-docker/](https://docs.docker.com/get-docker/)         |
-| **Postman (Optional)**     | Latest  | [https://www.postman.com/downloads/](https://www.postman.com/downloads/)           |
-
-## ⚙️ Application Installation Guide
-
-### 1️⃣ Run the Database
-
-1. Navigate to the database directory:
+1. Navigate to the directory:
 
 ```bash
-cd applications/database
+cd deep_project
 ```
 
-2. Start the database service using Docker Compose:
+2. Start the Application:
 
 ```bash
 docker compose up --build
 ```
 
-3. (Optional) Restore sample data from backup:
-   `./applications/database/backup_v1.dump`
+| Service | URL | Description |
+|----------|------|-------------|
+| API | http://localhost:4345| Backend service |
+| WebApp | http://localhost:3000| Frontend web panel |
+| pgAdmin | http://localhost:5050| Database management UI |
+| PostgreSQL | localhost:5432 | Database service | 
 
-4. (Optional) Initialize the database by executing the SQL script:
-   `./applications/database/init.sql`
 
----
-
-### 2️⃣ Run the API Service
-
-1. Navigate to the API directory:
-
-```bash
-cd applications/api
-```
-
-2. Start the API service:
-
-```bash
-docker compose up --build
-```
-
----
-
-### 3️⃣ Import Postman Collection
-
-To test the API endpoints using Postman, import the following files:
-
-- `applications/api/deep-search.postman_collection.json`
-
-💡 These files include all API routes needed to test the Deep Search API.
-
----
-
-### 4️⃣ Run the Web application (Optional)
-
-1. Navigate to the Website directory:
-
-```bash
-cd applications/website
-```
-
-2. Start the Website:
-
-```bash
-docker compose up --build
-```
-
----
-
-### 5️⃣ Run the Mobile application (Optional)
+### 2️⃣ Run the Mobile application (Optional)
 
 1. Navigate to the Mobile directory:
 
@@ -188,7 +134,7 @@ Replace <device_id> with the ID shown in the previous command.
 
 ## System Workflow
 
-1. User uploads or captures a product image via mobile (Flutter) or web (....)
+1. User uploads or captures a product image via mobile and web
 
 2. Image is sent to the FastAPI backend
 
