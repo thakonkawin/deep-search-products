@@ -7,7 +7,6 @@ from torchvision.models import ResNet18_Weights
 class DeepSearchShoeModel(nn.Module):
     def __init__(self, embedding_size=128):
         super(DeepSearchShoeModel, self).__init__()
-        # self.backbone = torchvision.models.resnet18(pretrained=True)
         self.backbone = torchvision.models.resnet18(weights=ResNet18_Weights.DEFAULT)
         in_dim = self.backbone.fc.in_features
         self.backbone.fc = nn.Identity()

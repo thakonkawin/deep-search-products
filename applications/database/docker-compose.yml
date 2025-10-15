@@ -1,7 +1,6 @@
 services:
   postgres:
-    image: pgvector/pgvector:pg15-trixie
-    container_name: postgres
+    image: pgvector/pgvector:pg18-trixie
     environment:
       POSTGRES_DB: deep_project_db
       POSTGRES_USER: myuser
@@ -14,7 +13,6 @@ services:
 
   pgadmin:
     image: dpage/pgadmin4:latest
-    container_name: pgadmin
     environment:
       PGADMIN_DEFAULT_EMAIL: admin@admin.com
       PGADMIN_DEFAULT_PASSWORD: admin
