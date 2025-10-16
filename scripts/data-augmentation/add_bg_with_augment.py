@@ -6,7 +6,7 @@ import numpy as np
 from PIL import Image, ImageEnhance
 
 
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 DATA_PATH = os.path.join(BASE_DIR, "data", "dataset")
 RAW_PATH = os.path.join(DATA_PATH, "Raw")
 TRAIN_PATH = os.path.join(DATA_PATH, "Train")

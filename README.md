@@ -78,19 +78,26 @@ conda activate deep_search
 pip install -r requirements.txt
 ```
 
-5. Run the model training notebook:
+5. Run trai:
+
+```bash
+python scripts/data-augmentation/add_bg_with_augment.py
+```
+
+6. Run the model training notebook:
 
 ```bash
 jupyter notebook train_model.ipynb
 ```
+
 ## ⚙️ Installation & Run Apllication
 
-### 1️⃣  Installation & Run Apllication
+### 1️⃣ Installation & Run Apllication
 
 1. Navigate to the directory:
 
 ```bash
-cd deep_project
+cd deep-product-search
 ```
 
 2. Start the Application:
@@ -99,13 +106,12 @@ cd deep_project
 docker compose up --build
 ```
 
-| Service | URL | Description |
-|----------|------|-------------|
-| API | http://localhost:4345| Backend service |
-| WebApp | http://localhost:3000| Frontend web panel |
-| pgAdmin | http://localhost:5050| Database management UI |
-| PostgreSQL | localhost:5432 | Database service | 
-
+| Service    | URL                   | Description            |
+| ---------- | --------------------- | ---------------------- |
+| API        | http://localhost:4345 | Backend service        |
+| WebApp     | http://localhost:3000 | Frontend web panel     |
+| pgAdmin    | http://localhost:5050 | Database management UI |
+| PostgreSQL | localhost:5432        | Database service       |
 
 ### 2️⃣ Run the Mobile application (Optional)
 
