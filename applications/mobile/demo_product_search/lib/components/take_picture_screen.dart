@@ -31,48 +31,69 @@ class TakePictureScreenState extends State<TakePictureScreen> {
   }
 
   Future<File> _cropAndResize(File originalImage, Size screenSize) async {
-    final stopwatch = Stopwatch()..start();
+    final totalStopwatch = Stopwatch()..start();
 
-    // อ่านไฟล์ครั้งเดียว
     final imageBytes = await originalImage.readAsBytes();
     final img.Image? capturedImage = img.decodeImage(imageBytes);
     if (capturedImage == null) throw Exception("ไม่สามารถอ่านภาพได้");
 
-    // กำหนดขนาด box ของ crop
+    const int maxDimension = 560;
+    img.Image workingImage = capturedImage;
+
+    if (capturedImage.width > maxDimension ||
+        capturedImage.height > maxDimension) {
+      workingImage = img.copyResize(
+        capturedImage,
+        width: capturedImage.width > capturedImage.height ? maxDimension : null,
+        height: capturedImage.height >= capturedImage.width
+            ? maxDimension
+            : null,
+      );
+    }
+
+    final cropStopwatch = Stopwatch()..start();
+
     final boxWidth = screenSize.width;
-    final boxHeight = screenSize.width;
+    final boxHeight = screenSize.width; // square crop
     final overlayLeft = (screenSize.width - boxWidth) / 2;
     final overlayTop = (screenSize.height - boxHeight) / 2;
-    final scaleX = capturedImage.width / screenSize.width;
-    final scaleY = capturedImage.height / screenSize.height;
 
-    // คำนวณ crop rectangle
+    final scaleX = workingImage.width / screenSize.width;
+    final scaleY = workingImage.height / screenSize.height;
+
     final cropX = (overlayLeft * scaleX).round();
     final cropY = (overlayTop * scaleY).round();
     final cropWidth = (boxWidth * scaleX).round();
     final cropHeight = (boxHeight * scaleY).round();
 
-    // Crop image
     final img.Image cropped = img.copyCrop(
-      capturedImage,
+      workingImage,
       x: cropX,
       y: cropY,
       width: cropWidth,
       height: cropHeight,
     );
 
-    final jpgBytes = img.encodeJpg(cropped, quality: 50);
+    cropStopwatch.stop();
+    debugPrint('เวลาทำการ crop: ${cropStopwatch.elapsedMilliseconds} ms');
 
-    // Save file
+    final encodeStopwatch = Stopwatch()..start();
+
+    final jpgBytes = img.encodeJpg(cropped);
     final tempDir = await getTemporaryDirectory();
     final croppedFile = File(
       '${tempDir.path}/cropped_${DateTime.now().millisecondsSinceEpoch}.jpg',
     );
     await croppedFile.writeAsBytes(jpgBytes);
 
-    stopwatch.stop();
+    encodeStopwatch.stop();
+    totalStopwatch.stop();
+
     debugPrint(
-      'เวลาทำงานของ _cropAndResize: ${stopwatch.elapsedMilliseconds} ms',
+      'เวลาบีบอัดและบันทึก: ${encodeStopwatch.elapsedMilliseconds} ms',
+    );
+    debugPrint(
+      'เวลาทั้งหมดของ _cropAndResize: ${totalStopwatch.elapsedMilliseconds} ms',
     );
 
     return croppedFile;
