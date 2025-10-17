@@ -56,7 +56,7 @@ similar products.
 1. Clone the repository:
 
 ```bash
-git clone https://github.com/thakonkawin/deep-product-search.git
+git clone https://github.com/thakonkawin/deep-search-products.git
 cd deep-product-search
 ```
 

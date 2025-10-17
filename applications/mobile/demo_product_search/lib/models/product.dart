@@ -21,15 +21,19 @@ class Product {
     this.shelf,
   });
 
-  factory Product.fromListJson(Map<String, dynamic> json) {
+  factory Product.fromListJson(Map<String, dynamic> json, host) {
+    String path = 'http://$host/products/image/${json['image_id'][0]}';
+
     return Product(
       productCode: json['product_code'],
       productName: json['product_name'],
-      imageUrl: json['image_url'],
+      imageUrl: path,
     );
   }
 
-  factory Product.fromDetailJson(Map<String, dynamic> json) {
+  factory Product.fromDetailJson(Map<String, dynamic> json, host) {
+    String path = 'http://$host/products/image/${json['image_id'][0]}';
+
     return Product(
       productCode: json['product_code'],
       productName: json['product_name'],
@@ -37,7 +41,7 @@ class Product {
       price: (json['price'] as num).toDouble(),
       quantity: json['quantity'],
       category: json['category'],
-      imageUrl: json['image_url'],
+      imageUrl: path,
       unit: json['unit'],
       shelf: json['shelf'],
     );

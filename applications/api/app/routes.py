@@ -9,7 +9,13 @@ from .models.model import DeepSearchShoeModel
 from .models.utils import get_image_embedding, cosine_distance_to_percent
 from sqlalchemy.ext.asyncio import AsyncSession
 from fastapi import APIRouter, Depends, HTTPException, UploadFile
-from .products import Product, ProductSchema, ProductStatisticsResponse, LowStockProduct, ProductVector
+from .products import (
+    Product,
+    ProductSchema,
+    ProductStatisticsResponse,
+    LowStockProduct,
+    ProductVector,
+)
 import base64
 from fastapi.responses import Response
 import uuid
@@ -27,6 +33,7 @@ model.load_state_dict(state_dict)
 model.to(device)
 model.eval()
 
+
 @router.get("/products", tags=["Product"], response_model=list[ProductSchema])
 async def get_products(
     db: AsyncSession = Depends(get_db),
@@ -41,9 +48,13 @@ async def get_products(
             Product.category,
             Product.unit,
             Product.shelf,
-            func.array_agg(ProductVector.id).label("image_id")
+            func.array_agg(ProductVector.id).label("image_id"),
         )
-        .join(ProductVector, Product.product_code == ProductVector.product_code, isouter=True)
+        .join(
+            ProductVector,
+            Product.product_code == ProductVector.product_code,
+            isouter=True,
+        )
         .group_by(
             Product.product_code,
             Product.product_name,
@@ -52,18 +63,18 @@ async def get_products(
             Product.quantity,
             Product.category,
             Product.unit,
-            Product.shelf
+            Product.shelf,
         )
         .order_by(Product.product_code)
     )
 
     result = await db.execute(stmt)
-    
+
     rows = result.mappings().all()
 
     products = []
     for row in rows:
-        raw_image_ids = row['image_id'] or []
+        raw_image_ids = row["image_id"] or []
 
         image_ids = []
         for item in raw_image_ids:
@@ -75,21 +86,24 @@ async def get_products(
 
         products.append(
             ProductSchema(
-                product_code=row['product_code'],
-                product_name=row['product_name'],
-                description=row['description'],
-                price=float(row['price']),
-                quantity=row['quantity'],
-                category=row['category'],
-                unit=row['unit'],
-                shelf=row['shelf'],
+                product_code=row["product_code"],
+                product_name=row["product_name"],
+                description=row["description"],
+                price=float(row["price"]),
+                quantity=row["quantity"],
+                category=row["category"],
+                unit=row["unit"],
+                shelf=row["shelf"],
                 image_id=image_ids,
             )
         )
 
     return products
 
-@router.get("/products/statistics", tags=["Product"], response_model=ProductStatisticsResponse)
+
+@router.get(
+    "/products/statistics", tags=["Product"], response_model=ProductStatisticsResponse
+)
 async def get_product_statistics(db: AsyncSession = Depends(get_db)):
     try:
         total_stmt = select(func.count(Product.product_code))
@@ -105,11 +119,7 @@ async def get_product_statistics(db: AsyncSession = Depends(get_db)):
         total_categories = category_result.scalar()
 
         low_stock_stmt = (
-            select(
-                Product.product_code,
-                Product.product_name,
-                Product.quantity
-            )
+            select(Product.product_code, Product.product_name, Product.quantity)
             .order_by(Product.quantity.asc())
             .limit(5)
         )
@@ -124,14 +134,17 @@ async def get_product_statistics(db: AsyncSession = Depends(get_db)):
                 LowStockProduct(
                     product_code=row.product_code,
                     product_name=row.product_name,
-                    quantity=row.quantity
+                    quantity=row.quantity,
                 )
                 for row in low_stock_products
-            ]
+            ],
         )
 
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Error fetching statistics: {str(e)}")
+        raise HTTPException(
+            status_code=500, detail=f"Error fetching statistics: {str(e)}"
+        )
+
 
 @router.get("/products/{product_code}", response_model=ProductSchema, tags=["Product"])
 async def get_product_details(product_code: str, db: AsyncSession = Depends(get_db)):
@@ -141,8 +154,10 @@ async def get_product_details(product_code: str, db: AsyncSession = Depends(get_
 
     if not product:
         raise HTTPException(status_code=404, detail="Product not found")
-    
-    vector_stmt = select(ProductVector.id).where(ProductVector.product_code == product_code)
+
+    vector_stmt = select(ProductVector.id).where(
+        ProductVector.product_code == product_code
+    )
     vector_result = await db.execute(vector_stmt)
     image_ids = [row[0] for row in vector_result.all()]
 
@@ -150,6 +165,7 @@ async def get_product_details(product_code: str, db: AsyncSession = Depends(get_
     product_data.image_id = image_ids
 
     return product_data
+
 
 @router.post("/products", response_model=ProductSchema, tags=["Product"])
 async def add_product(product: ProductSchema, db: AsyncSession = Depends(get_db)):
@@ -163,6 +179,7 @@ async def add_product(product: ProductSchema, db: AsyncSession = Depends(get_db)
     except Exception as e:
         await db.rollback()
         raise HTTPException(status_code=500, detail=str(e))
+
 
 @router.post("/products-vectors", tags=["Product"])
 async def upload_product_vectors(
@@ -209,6 +226,7 @@ async def upload_product_vectors(
         await db.rollback()
         raise HTTPException(status_code=500, detail=str(e))
 
+
 @router.post("/deep", tags=["Product"])
 async def upload_product_vectors(
     file: UploadFile = File(...), db: AsyncSession = Depends(get_db)
@@ -247,7 +265,7 @@ async def upload_product_vectors(
                 distance = cosine_distance_to_percent(row.distance)
                 unique_matches.append(
                     {
-                        "id": str(row.id),
+                        # "id": str(row.id),
                         "product_code": row.product_code,
                         "similarity": distance,
                     }
@@ -257,7 +275,7 @@ async def upload_product_vectors(
                 break
 
             if not unique_matches or all(
-                match["similarity"] > 0.7 for match in unique_matches
+                match["similarity"] < 50 for match in unique_matches
             ):
                 raise HTTPException(status_code=400, detail="Image not match")
 
@@ -267,6 +285,7 @@ async def upload_product_vectors(
         raise e
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
+
 
 @router.get("/products/image/{id}", tags=["Product"])
 async def get_product_image(id: str, db: AsyncSession = Depends(get_db)):
@@ -283,19 +302,25 @@ async def get_product_image(id: str, db: AsyncSession = Depends(get_db)):
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
 
+
 @router.delete("/products/{product_code}", status_code=204, tags=["Product"])
 async def delete_product(product_code: str, db: AsyncSession = Depends(get_db)):
-    result = await db.execute(select(Product).where(Product.product_code == product_code))
+    result = await db.execute(
+        select(Product).where(Product.product_code == product_code)
+    )
     product = result.scalars().first()
     if not product:
         raise HTTPException(status_code=404, detail="Product not found")
 
-    await db.execute(delete(ProductVector).where(ProductVector.product_code == product_code))
+    await db.execute(
+        delete(ProductVector).where(ProductVector.product_code == product_code)
+    )
 
     await db.delete(product)
     await db.commit()
 
     return
+
 
 @router.delete("/products/image/{id}", status_code=204, tags=["Product"])
 async def delete_product(id: str, db: AsyncSession = Depends(get_db)):
@@ -309,13 +334,16 @@ async def delete_product(id: str, db: AsyncSession = Depends(get_db)):
 
     return
 
+
 @router.put("/products/{product_code}", response_model=ProductSchema, tags=["Product"])
 async def update_product(
     product_code: str,
     product_update: ProductSchema,
     db: AsyncSession = Depends(get_db),
 ):
-    result = await db.execute(select(Product).where(Product.product_code == product_code))
+    result = await db.execute(
+        select(Product).where(Product.product_code == product_code)
+    )
     product = result.scalars().first()
     if not product:
         raise HTTPException(status_code=404, detail="Product not found")
@@ -328,11 +356,12 @@ async def update_product(
     await db.commit()
     await db.refresh(product)
 
-    vector_stmt = select(ProductVector.id).where(ProductVector.product_code == product_code)
+    vector_stmt = select(ProductVector.id).where(
+        ProductVector.product_code == product_code
+    )
     vector_result = await db.execute(vector_stmt)
     image_ids = [row[0] for row in vector_result.all()]
 
     product_data = ProductSchema.model_validate(product)
     product_data.image_id = image_ids
     return product_data
-

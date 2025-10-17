@@ -131,7 +131,7 @@ class DeepScreen extends StatelessWidget {
                                                             .ellipsis,
                                                       ),
                                                       Text(
-                                                        'similarity: ${provider.results[index].similarity.toStringAsFixed(3)}',
+                                                        'similarity: ${provider.results[index].similarity.toStringAsFixed(2)}%',
                                                         textAlign:
                                                             TextAlign.start,
                                                         maxLines: 1,

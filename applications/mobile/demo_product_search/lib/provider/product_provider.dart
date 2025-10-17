@@ -25,7 +25,7 @@ class ProductProvider extends ChangeNotifier {
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
         products = (data as List)
-            .map((item) => Product.fromListJson(item))
+            .map((item) => Product.fromListJson(item, host))
             .toList();
         status = ScreenStatus.success;
         selectedProduct = null;
@@ -49,7 +49,7 @@ class ProductProvider extends ChangeNotifier {
       final response = await http.get(Uri.parse('http://$host/products/$code'));
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
-        selectedProduct = Product.fromDetailJson(data);
+        selectedProduct = Product.fromDetailJson(data, host);
         status = ScreenStatus.success;
         products = [];
       } else {

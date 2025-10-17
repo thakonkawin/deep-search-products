@@ -6,6 +6,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 DATABASE_URL = os.getenv("DATABASE_URL")
+# DATABASE_URL = "postgresql+asyncpg://myuser:mypassword@localhost:5432/deep_project_db"
 
 if not DATABASE_URL:
     raise ValueError("DATABASE_URL is not set in the environment variables.")
