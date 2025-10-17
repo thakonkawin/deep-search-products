@@ -78,7 +78,7 @@ conda activate deep_search
 pip install -r requirements.txt
 ```
 
-5. Run trai:
+5. Run the script to generate training data:
 
 ```bash
 python scripts/data-augmentation/add_bg_with_augment.py
