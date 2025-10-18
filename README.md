@@ -97,7 +97,7 @@ jupyter notebook train_model.ipynb
 1. Navigate to the directory:
 
 ```bash
-cd deep-product-search
+cd deep-search-products
 ```
 
 2. Start the Application:
